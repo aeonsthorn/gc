@@ -1666,26 +1666,64 @@ var import_fs = require("fs");
 var path = __toESM(require("path"));
 function create(name, options) {
   return __async(this, null, function* () {
+    const dirName = name.charAt(0).toLowerCase() + name.slice(1);
     const componentName = name.charAt(0).toUpperCase() + name.slice(1);
-    yield import_fs.promises.mkdir(path.join(process.cwd(), name));
-    const componentFileContent = yield import_fs.promises.readFile(path.join(process.cwd(), "template/typescript/__Component__.tsx"), { encoding: "utf-8" });
-    yield import_fs.promises.writeFile(path.join(process.cwd(), name, `${componentName}.tsx`), componentFileContent.replace(/__Component__/g, componentName));
-    const storyFileContent = yield import_fs.promises.readFile(path.join(process.cwd(), "template/typescript/__Component__.stories.tsx"), { encoding: "utf-8" });
-    yield import_fs.promises.writeFile(path.join(process.cwd(), name, `${componentName}.stories.tsx`), storyFileContent.replace(/__Component__/g, componentName));
-    const testFileContent = yield import_fs.promises.readFile(path.join(process.cwd(), "template/typescript/__Component__.test.tsx"), { encoding: "utf-8" });
-    yield import_fs.promises.writeFile(path.join(process.cwd(), name, `${componentName}.test.tsx`), testFileContent.replace(/__Component__/g, componentName));
-    const indexFileContent = yield import_fs.promises.readFile(path.join(process.cwd(), "template/typescript/index.ts"), { encoding: "utf-8" });
-    yield import_fs.promises.writeFile(path.join(process.cwd(), name, "index.ts"), indexFileContent.replace(/__Component__/g, componentName));
-    const scssFileContent = yield import_fs.promises.readFile(path.join(process.cwd(), "template/typescript/__Component__.styles.scss"), { encoding: "utf-8" });
-    yield import_fs.promises.writeFile(path.join(process.cwd(), name, `${componentName}.styles.scss`), scssFileContent.replace(/__Component__/g, componentName));
+    yield import_fs.promises.mkdir(path.join(process.cwd(), dirName));
     const globalStylesFileExists = (0, import_fs.existsSync)("styles/globals.scss");
     if (globalStylesFileExists) {
-      const globalStylesFile = yield import_fs.promises.readFile("styles/globals.scss", {
-        encoding: "utf-8"
-      });
-      yield import_fs.promises.writeFile(path.join(process.cwd(), "styles/globals.scss"), `@use '../components/${name}/${componentName}.styles.scss';
-${globalStylesFile}`);
+      yield appendImportToGlobalStylesFile(dirName, componentName);
     }
+    return Promise.all([
+      createComponentFile(dirName, componentName),
+      createStoryFile(dirName, componentName),
+      createTestFile(dirName, componentName),
+      createIndexFile(dirName, componentName),
+      createScssFile(dirName, componentName)
+    ]);
+  });
+}
+function createComponentFile(dirName, componentName) {
+  return __async(this, null, function* () {
+    return createFileFromTemplate(dirName, componentName, ".tsx");
+  });
+}
+function createStoryFile(dirName, componentName) {
+  return __async(this, null, function* () {
+    const storyFileContent = yield import_fs.promises.readFile(path.join(process.cwd(), "template/typescript/__Component__.stories.tsx"), { encoding: "utf-8" });
+    return import_fs.promises.writeFile(path.join(process.cwd(), dirName, `${componentName}.stories.tsx`), storyFileContent.replace(/__Component__/g, componentName));
+  });
+}
+function createTestFile(dirName, componentName) {
+  return __async(this, null, function* () {
+    const testFileContent = yield import_fs.promises.readFile(path.join(process.cwd(), "template/typescript/__Component__.test.tsx"), { encoding: "utf-8" });
+    return import_fs.promises.writeFile(path.join(process.cwd(), dirName, `${componentName}.test.tsx`), testFileContent.replace(/__Component__/g, componentName));
+  });
+}
+function createIndexFile(dirName, componentName) {
+  return __async(this, null, function* () {
+    const indexFileContent = yield import_fs.promises.readFile(path.join(process.cwd(), "template/typescript/index.ts"), { encoding: "utf-8" });
+    return import_fs.promises.writeFile(path.join(process.cwd(), dirName, "index.ts"), indexFileContent.replace(/__Component__/g, componentName));
+  });
+}
+function createScssFile(dirName, componentName) {
+  return __async(this, null, function* () {
+    const scssFileContent = yield import_fs.promises.readFile(path.join(process.cwd(), "template/typescript/__Component__.styles.scss"), { encoding: "utf-8" });
+    return import_fs.promises.writeFile(path.join(process.cwd(), dirName, `${componentName}.styles.scss`), scssFileContent.replace(/__Component__/g, componentName));
+  });
+}
+function appendImportToGlobalStylesFile(dirName, componentName) {
+  return __async(this, null, function* () {
+    const globalStylesFile = yield import_fs.promises.readFile("styles/globals.scss", {
+      encoding: "utf-8"
+    });
+    yield import_fs.promises.writeFile(path.join(process.cwd(), "styles/globals.scss"), `@use '../components/${dirName}/${componentName}.styles.scss';
+${globalStylesFile}`);
+  });
+}
+function createFileFromTemplate(dirName, componentName, fileSuffix) {
+  return __async(this, null, function* () {
+    const templateFileContent = yield import_fs.promises.readFile(path.join(process.cwd(), `template/typescript/__Component__${fileSuffix}`), { encoding: "utf-8" });
+    return import_fs.promises.writeFile(path.join(process.cwd(), dirName, `${componentName}${fileSuffix}`), templateFileContent.replace(/__Component__/g, componentName));
   });
 }
 

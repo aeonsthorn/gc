@@ -1,6 +1,5 @@
 import create from "../src/create";
 import { promises as fs, existsSync } from "fs";
-import * as path from "path";
 
 describe("create command should create a component", () => {
   beforeAll(async () => {
