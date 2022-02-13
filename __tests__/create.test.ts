@@ -7,8 +7,6 @@ describe("create command should create a component", () => {
     return fs.writeFile("styles/globals.scss", "body { color: red; }");
   });
 
-  beforeEach(async () => {});
-
   afterEach(async () => {
     return fs.rm("coco", { recursive: true, force: true });
   });
@@ -19,7 +17,9 @@ describe("create command should create a component", () => {
   });
 
   it("should create the files based on the template", async () => {
-    await create("coco", {});
+    await create("coco", {
+      quiet: true,
+    });
 
     expect(existsSync("coco/Coco.tsx")).toBe(true);
 

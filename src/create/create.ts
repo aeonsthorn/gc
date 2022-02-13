@@ -1,26 +1,63 @@
 import { existsSync, promises as fs } from "fs";
 import * as path from "path";
 
-export default async function create(name: string, options: any) {
+import chalk from "chalk";
+
+type Options = {
+  dryRun?: boolean;
+  quiet?: boolean;
+};
+
+export default async function create(name: string, options: Options) {
   const dirName = name.charAt(0).toLowerCase() + name.slice(1);
   const componentName = name.charAt(0).toUpperCase() + name.slice(1);
 
-  await fs.mkdir(path.join(process.cwd(), dirName));
-
-  const globalStylesFileExists = existsSync("styles/globals.scss");
-
-  if (globalStylesFileExists) {
-    await appendImportToGlobalStylesFile(dirName, componentName);
+  if (options.dryRun) {
+    logOutput(dirName, componentName);
+    return;
   }
 
-  return Promise.all([
-    createComponentFile(dirName, componentName),
-    createStoryFile(dirName, componentName),
-    createTestFile(dirName, componentName),
-    createIndexFile(dirName, componentName),
-    createScssFile(dirName, componentName),
-  ]);
+  try {
+    await fs.mkdir(path.join(process.cwd(), dirName));
+
+    const globalStylesFileExists = existsSync("styles/globals.scss");
+
+    if (globalStylesFileExists) {
+      await appendImportToGlobalStylesFile(dirName, componentName);
+    }
+
+    await Promise.all([
+      createComponentFile(dirName, componentName),
+      createStoryFile(dirName, componentName),
+      createTestFile(dirName, componentName),
+      createIndexFile(dirName, componentName),
+      createScssFile(dirName, componentName),
+    ]);
+  } catch (e: any) {
+    console.error(chalk.red(e));
+
+    return;
+  }
+
+  if (!options.quiet) {
+    logOutput(dirName, componentName);
+  }
 }
+
+function logOutput(dirName: string, componentName: string) {
+  okLog(`Created folder components/${dirName}`);
+  okLog(`Created file components/${dirName}/${componentName}.tsx`);
+
+  okLog(`Created file components/${dirName}/${componentName}.styles.scss`);
+
+  okLog(`Created file components/${dirName}/${componentName}.test.tsx`);
+
+  okLog(`Created file components/${dirName}/${componentName}.stories.tsx`);
+
+  okLog(`Created file components/${dirName}/index.tsx`);
+}
+
+const okLog = (...args: any) => console.log(chalk.green(...args));
 
 async function appendImportToGlobalStylesFile(
   dirName: string,

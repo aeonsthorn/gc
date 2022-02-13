@@ -15,6 +15,7 @@ program
   .argument("<name>", "Name for the component")
   .option("--dry-run", "Dry run")
   .option("--js", "Javascript version")
+  .option("--quiet", "Quiet mode")
 
   .action(create);
 
