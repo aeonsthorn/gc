@@ -24,7 +24,7 @@ program
   .description("Rename a component")
   .argument("<oldName>", "Name for the component")
   .argument("<newName>", "New name for the component")
-  .action((oldName, newName, options) => {
+  .action((oldName, newName) => {
     console.log({ oldName });
     console.log({ newName });
   });
@@ -33,7 +33,7 @@ program
   .command("delete")
   .description("Delete a component")
   .argument("<name>", "Name for the component")
-  .action((name, options) => {
+  .action((name) => {
     console.log({ name });
   });
 

@@ -1,6 +1,14 @@
+import { promises as fs, existsSync } from "fs";
+import {
+  describe,
+  beforeAll,
+  afterEach,
+  afterAll,
+  it,
+  expect,
+} from "@jest/globals";
 import create from "../src/create";
 import rename from "../src/rename";
-import { promises as fs, existsSync } from "fs";
 
 describe("rename command should rename a component", () => {
   beforeAll(async () => {
@@ -11,9 +19,7 @@ describe("rename command should rename a component", () => {
     );
   });
 
-  afterEach(async () => {
-    return fs.rm("coco", { recursive: true, force: true });
-  });
+  afterEach(async () => fs.rm("coco", { recursive: true, force: true }));
 
   afterAll(async () => {
     await fs.unlink("styles/globals.scss");

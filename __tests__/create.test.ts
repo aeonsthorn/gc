@@ -1,5 +1,13 @@
-import create from "../src/create";
 import { promises as fs, existsSync } from "fs";
+import {
+  describe,
+  beforeAll,
+  afterEach,
+  afterAll,
+  it,
+  expect,
+} from "@jest/globals";
+import create from "../src/create";
 
 describe("create command should create a component", () => {
   beforeAll(async () => {
@@ -7,9 +15,7 @@ describe("create command should create a component", () => {
     return fs.writeFile("styles/globals.scss", "body { color: red; }");
   });
 
-  afterEach(async () => {
-    return fs.rm("coco", { recursive: true, force: true });
-  });
+  afterEach(async () => fs.rm("coco", { recursive: true, force: true }));
 
   afterAll(async () => {
     await fs.unlink("styles/globals.scss");
