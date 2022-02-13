@@ -19,7 +19,10 @@ describe("rename command should rename a component", () => {
     );
   });
 
-  afterEach(async () => fs.rm("coco", { recursive: true, force: true }));
+  afterEach(async () => {
+    await fs.rm("coco", { recursive: true, force: true });
+    return fs.rm("yoyo", { recursive: true, force: true });
+  });
 
   afterAll(async () => {
     await fs.unlink("styles/globals.scss");

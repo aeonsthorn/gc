@@ -1,3 +1,3 @@
-const rename = (oldName: string, newName: string) => {};
+const rename = () => {};
 
 export default rename;
