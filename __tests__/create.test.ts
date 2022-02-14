@@ -15,7 +15,7 @@ describe("create command should create a component", () => {
     return fs.writeFile("styles/globals.scss", "body { color: red; }");
   });
 
-  afterEach(async () => fs.rm("coco", { recursive: true, force: true }));
+  afterEach(async () => fs.rm("components", { recursive: true, force: true }));
 
   afterAll(async () => {
     await fs.unlink("styles/globals.scss");
@@ -27,15 +27,15 @@ describe("create command should create a component", () => {
       quiet: true,
     });
 
-    expect(existsSync("coco/Coco.tsx")).toBe(true);
+    expect(existsSync("components/coco/Coco.tsx")).toBe(true);
 
-    expect(existsSync("coco/Coco.stories.tsx")).toBe(true);
+    expect(existsSync("components/coco/Coco.stories.tsx")).toBe(true);
 
-    expect(existsSync("coco/Coco.test.tsx")).toBe(true);
+    expect(existsSync("components/coco/Coco.test.tsx")).toBe(true);
 
-    expect(existsSync("coco/index.ts")).toBe(true);
+    expect(existsSync("components/coco/index.ts")).toBe(true);
 
-    expect(existsSync("coco/Coco.styles.scss")).toBe(true);
+    expect(existsSync("components/coco/Coco.styles.scss")).toBe(true);
 
     const scssGlobalFileContent = await fs.readFile("styles/globals.scss", {
       encoding: "utf-8",

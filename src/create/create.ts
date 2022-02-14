@@ -1,7 +1,10 @@
 import { existsSync, promises as fs } from "fs";
 import * as path from "path";
-
 import chalk from "chalk";
+
+if (process.env.JEST_WORKER_ID) {
+  __dirname = path.join(__dirname, "..");
+}
 
 type Options = {
   dryRun?: boolean;
@@ -101,6 +104,7 @@ async function createFileFromTemplate(
     path.join(
       __dirname,
       "..",
+
       `template/typescript/__Component__${fileSuffix}`
     ),
     { encoding: "utf-8" }
