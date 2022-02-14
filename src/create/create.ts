@@ -13,6 +13,7 @@ export default async function create(name: string, options: Options) {
   const componentName = name.charAt(0).toUpperCase() + name.slice(1);
 
   if (options.dryRun) {
+    console.log("\n----- DRY RUN -----\n");
     logOutput(dirName, componentName);
     return;
   }
@@ -95,7 +96,11 @@ async function createFileFromTemplate(
   fileSuffix: string
 ) {
   const templateFileContent = await fs.readFile(
-    path.join(process.cwd(), `template/typescript/__Component__${fileSuffix}`),
+    path.join(
+      __dirname,
+      "..",
+      `template/typescript/__Component__${fileSuffix}`
+    ),
     { encoding: "utf-8" }
   );
 
@@ -107,7 +112,7 @@ async function createFileFromTemplate(
 
 async function createIndexFile(dirName: string, componentName: string) {
   const indexFileContent = await fs.readFile(
-    path.join(process.cwd(), "template/typescript/index.ts"),
+    path.join(__dirname, "..", "template/typescript/index.ts"),
     { encoding: "utf-8" }
   );
 
