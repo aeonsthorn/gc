@@ -2,15 +2,15 @@ import React from "react";
 import { expect, describe, it } from "@jest/globals";
 import { render } from "@testing-library/react";
 
-import Component from ".";
+import __Component__ from ".";
 
-describe("${titleCased} should work as expected", () => {
+describe("__Component__ should work as expected", () => {
   it("should render without crashing", () => {
-    expect(render(<Component />)).toBeTruthy();
+    expect(render(<__Component__ />)).toBeTruthy();
   });
 
   it("this is your first failing test. Start by making it work", () => {
-    const { getAllByText } = render(<Component />);
-    expect(getAllByText(/Component/)).toBeFalsy();
+    const { getAllByText } = render(<__Component__ />);
+    expect(getAllByText(/__Component__/)).toBeFalsy();
   });
 });
