@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 require("esbuild")
   .build({
     entryPoints: ["src/index.ts"],
