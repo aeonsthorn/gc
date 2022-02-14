@@ -1,5 +1,3 @@
-#! /usr/bin/env node
-
 import { Command } from "commander";
 
 import create from "./create";
@@ -29,6 +27,7 @@ program
   .action((oldName, newName) => {
     console.log({ oldName });
     console.log({ newName });
+    console.error("not implemented yet");
   });
 
 program
@@ -37,6 +36,7 @@ program
   .argument("<name>", "Name for the component")
   .action((name) => {
     console.log({ name });
+    console.error("not implemented yet");
   });
 
 program.parse(process.argv);
