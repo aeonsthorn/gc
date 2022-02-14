@@ -4,5 +4,7 @@ require("esbuild")
     bundle: true,
     outfile: "dist/bundle.js",
     platform: "node",
+    minify: true,
   })
+
   .catch(() => process.exit(1));
