@@ -19,7 +19,9 @@ export default async function create(name: string, options: Options) {
   }
 
   try {
-    await fs.mkdir(path.join(process.cwd(), dirName));
+    await fs.mkdir(path.join(process.cwd(), "components", dirName), {
+      recursive: true,
+    });
 
     const globalStylesFileExists = existsSync("styles/globals.scss");
 
@@ -105,7 +107,12 @@ async function createFileFromTemplate(
   );
 
   return fs.writeFile(
-    path.join(process.cwd(), dirName, `${componentName}${fileSuffix}`),
+    path.join(
+      process.cwd(),
+      "components",
+      dirName,
+      `${componentName}${fileSuffix}`
+    ),
     templateFileContent.replace(/__Component__/g, componentName)
   );
 }
@@ -117,7 +124,7 @@ async function createIndexFile(dirName: string, componentName: string) {
   );
 
   return fs.writeFile(
-    path.join(process.cwd(), dirName, "index.ts"),
+    path.join(process.cwd(), "components", dirName, "index.ts"),
     indexFileContent.replace(/__Component__/g, componentName)
   );
 }
