@@ -2,8 +2,11 @@ import { existsSync, promises as fs } from "fs";
 import * as path from "path";
 import chalk from "chalk";
 
+import appendImportToGlobalStylesFile from "../../plugins/appendImportToGlobalStylesFile";
+
 if (process.env.JEST_WORKER_ID) {
-  __dirname = path.join(__dirname, "..");
+  // eslint-disable-next-line no-global-assign
+  __dirname = path.join(__dirname, "..", "..");
 }
 
 type Options = {
@@ -64,20 +67,6 @@ function logOutput(dirName: string, componentName: string) {
 }
 
 const okLog = (...args: any) => console.log(chalk.green(...args));
-
-async function appendImportToGlobalStylesFile(
-  dirName: string,
-  componentName: string
-) {
-  const globalStylesFile = await fs.readFile("styles/globals.scss", {
-    encoding: "utf-8",
-  });
-
-  await fs.writeFile(
-    path.join(process.cwd(), "styles/globals.scss"),
-    `@use '../components/${dirName}/${componentName}.styles.scss';\n${globalStylesFile}`
-  );
-}
 
 async function createComponentFile(dirName: string, componentName: string) {
   return createFileFromTemplate(dirName, componentName, ".tsx");

@@ -7,7 +7,7 @@ import {
   it,
   expect,
 } from "@jest/globals";
-import create from "../src/create";
+import create from "../src/core/create";
 
 describe("create command should create a component", () => {
   beforeAll(async () => {
