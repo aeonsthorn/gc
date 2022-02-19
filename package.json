@@ -1,6 +1,6 @@
 {
   "name": "gc-react",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "main": "index.js",
   "license": "MIT",
   "description": "React component generator",
@@ -11,6 +11,10 @@
     "react-cli",
     "react-component"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aeonsthorn/gc"
+  },
   "bin": {
     "gc": "./index.js"
   },
