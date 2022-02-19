@@ -11,8 +11,20 @@ on the boilerplate typing time and reduce typos.
 
 ### With npm
 
+<br/>
+
 <code>
 $ npm install gc-react
+</code>
+
+<br/>
+<br/>
+
+### With yarn
+
+<br/>
+<code>
+$ yarn add gc-react
 </code>
 
 <br/>
@@ -61,7 +73,6 @@ $ npm install -g gc-react
 ### In the root of your react project
 
 <br/>
-
 <code>
 $ yarn gc create 'component_name'
 </code>
@@ -73,7 +84,6 @@ $ yarn gc create 'component_name'
 
 ### In the root of your react project
 
-<br/>
 <br/>
 <code>
 $ npm run gc create 'component_name'
