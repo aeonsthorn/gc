@@ -11,5 +11,10 @@
   },
   "lib": ["es2015"],
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "src/core/create/template/**/*"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "src/core/create/template/**/*",
+    "template"
+  ]
 }

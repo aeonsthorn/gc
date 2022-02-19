@@ -25,6 +25,7 @@ describe("create command should create a component", () => {
   it("should create the files based on the template", async () => {
     await create("coco", {
       quiet: true,
+      template: "ts-globalScss",
     });
 
     expect(existsSync("components/coco/Coco.tsx")).toBe(true);
