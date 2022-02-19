@@ -1,3 +1,10 @@
+# gc-react
+
+gc-react is a cli tool to <strong>generate react components quickly</strong>. You can use one of the templates or add your own to cut down
+on the boilerplate typing time and reduce typos.
+
+<br/>
+
 # Installation
 
 ## 1) Install the module
