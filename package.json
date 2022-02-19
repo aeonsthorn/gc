@@ -4,6 +4,13 @@
   "main": "index.js",
   "license": "MIT",
   "description": "React component generator",
+  "keywords": [
+    "react",
+    "template",
+    "generator",
+    "react-cli",
+    "react-component"
+  ],
   "bin": {
     "gc": "./index.js"
   },
