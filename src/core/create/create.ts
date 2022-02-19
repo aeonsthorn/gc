@@ -2,6 +2,8 @@ import { existsSync, promises as fs } from "fs";
 import * as path from "path";
 import chalk from "chalk";
 
+import loadConfig from "../loadConfig";
+
 import appendImportToGlobalStylesFile from "../../plugins/appendImportToGlobalStylesFile";
 
 if (process.env.JEST_WORKER_ID) {
@@ -12,13 +14,22 @@ if (process.env.JEST_WORKER_ID) {
 type Options = {
   dryRun?: boolean;
   quiet?: boolean;
+  templateName?: string;
 };
 
 export default async function create(name: string, options: Options) {
+  const configFileOptions = await loadConfig();
+
+  const mergedOptions = { ...configFileOptions, ...options };
+
+  if (!mergedOptions.templateName) {
+    mergedOptions.templateName = "ts-globalScss";
+  }
+
   const dirName = name.charAt(0).toLowerCase() + name.slice(1);
   const componentName = name.charAt(0).toUpperCase() + name.slice(1);
 
-  if (options.dryRun) {
+  if (mergedOptions.dryRun) {
     console.log("\n----- DRY RUN -----\n");
     logOutput(dirName, componentName);
     return;
@@ -35,20 +46,29 @@ export default async function create(name: string, options: Options) {
       await appendImportToGlobalStylesFile(dirName, componentName);
     }
 
-    await Promise.all([
-      createComponentFile(dirName, componentName),
-      createStoryFile(dirName, componentName),
-      createTestFile(dirName, componentName),
-      createIndexFile(dirName, componentName),
-      createScssFile(dirName, componentName),
-    ]);
+    const templateFilesDir = path.join(__dirname, "..", "template");
+
+    const templateFileNames = await fs.readdir(
+      path.join(templateFilesDir, mergedOptions.templateName)
+    );
+
+    const createFilePromises = templateFileNames.map((templateFileName) =>
+      createFileFromTemplate(
+        dirName,
+        componentName,
+        templateFileName,
+        mergedOptions
+      )
+    );
+
+    await Promise.all(createFilePromises);
   } catch (e: any) {
     console.error(chalk.red(e));
 
     return;
   }
 
-  if (!options.quiet) {
+  if (!mergedOptions.quiet) {
     logOutput(dirName, componentName);
   }
 }
@@ -68,33 +88,18 @@ function logOutput(dirName: string, componentName: string) {
 
 const okLog = (...args: any) => console.log(chalk.green(...args));
 
-async function createComponentFile(dirName: string, componentName: string) {
-  return createFileFromTemplate(dirName, componentName, ".tsx");
-}
-
-async function createStoryFile(dirName: string, componentName: string) {
-  return createFileFromTemplate(dirName, componentName, ".stories.tsx");
-}
-
-async function createTestFile(dirName: string, componentName: string) {
-  return createFileFromTemplate(dirName, componentName, ".test.tsx");
-}
-
-async function createScssFile(dirName: string, componentName: string) {
-  return createFileFromTemplate(dirName, componentName, ".styles.scss");
-}
-
 async function createFileFromTemplate(
   dirName: string,
   componentName: string,
-  fileSuffix: string
+  templateFileName: string,
+  options: Options
 ) {
   const templateFileContent = await fs.readFile(
     path.join(
       __dirname,
       "..",
 
-      `template/typescript/__Component__${fileSuffix}`
+      `template/${options.templateName}/${templateFileName}`
     ),
     { encoding: "utf-8" }
   );
@@ -104,20 +109,8 @@ async function createFileFromTemplate(
       process.cwd(),
       "components",
       dirName,
-      `${componentName}${fileSuffix}`
+      `${templateFileName.replace("__Component__", componentName)}`
     ),
     templateFileContent.replace(/__Component__/g, componentName)
-  );
-}
-
-async function createIndexFile(dirName: string, componentName: string) {
-  const indexFileContent = await fs.readFile(
-    path.join(__dirname, "..", "template/typescript/index.ts"),
-    { encoding: "utf-8" }
-  );
-
-  return fs.writeFile(
-    path.join(process.cwd(), "components", dirName, "index.ts"),
-    indexFileContent.replace(/__Component__/g, componentName)
   );
 }
