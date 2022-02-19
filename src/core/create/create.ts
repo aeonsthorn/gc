@@ -6,7 +6,7 @@ import loadConfig from "../loadConfig";
 
 import appendImportToGlobalStylesFile from "../../plugins/appendImportToGlobalStylesFile";
 
-if (process.env.JEST_WORKER_ID) {
+if (isJest()) {
   // eslint-disable-next-line no-global-assign
   __dirname = path.join(__dirname, "..", "..");
 }
@@ -14,31 +14,39 @@ if (process.env.JEST_WORKER_ID) {
 type Options = {
   dryRun?: boolean;
   quiet?: boolean;
-  templateName?: string;
+  template?: string;
 };
+
+const DEFAULT_TEMPLATE_NAME = "js-next";
 
 export default async function create(name: string, options: Options) {
   const configFileOptions = await loadConfig();
 
-  const mergedOptions = { ...configFileOptions, ...options };
+  const mergedOptions = {
+    template: DEFAULT_TEMPLATE_NAME,
+    ...configFileOptions,
+    ...options,
+  };
 
-  if (!mergedOptions.templateName) {
-    mergedOptions.templateName = "ts-globalScss";
+  if (mergedOptions.dryRun && mergedOptions.quiet) {
+    printOnlineHelp();
+
+    return;
   }
 
   const dirName = name.charAt(0).toLowerCase() + name.slice(1);
   const componentName = name.charAt(0).toUpperCase() + name.slice(1);
 
-  if (mergedOptions.dryRun) {
-    console.log("\n----- DRY RUN -----\n");
-    logOutput(dirName, componentName);
-    return;
-  }
-
   try {
-    await fs.mkdir(path.join(process.cwd(), "components", dirName), {
-      recursive: true,
-    });
+    if (!mergedOptions.dryRun) {
+      await fs.mkdir(path.join(process.cwd(), "components", dirName), {
+        recursive: true,
+      });
+    }
+
+    if (!options.quiet) {
+      okLog(`Created folder components/${dirName}`);
+    }
 
     const globalStylesFileExists = existsSync("styles/globals.scss");
 
@@ -46,10 +54,12 @@ export default async function create(name: string, options: Options) {
       await appendImportToGlobalStylesFile(dirName, componentName);
     }
 
-    const templateFilesDir = path.join(__dirname, "..", "template");
+    const templateFilesDir = hasACustomTemplateDir()
+      ? path.join(process.cwd(), "template")
+      : path.join(__dirname, "..", "template");
 
     const templateFileNames = await fs.readdir(
-      path.join(templateFilesDir, mergedOptions.templateName)
+      path.join(templateFilesDir, mergedOptions.template)
     );
 
     const createFilePromises = templateFileNames.map((templateFileName) =>
@@ -64,29 +74,8 @@ export default async function create(name: string, options: Options) {
     await Promise.all(createFilePromises);
   } catch (e: any) {
     console.error(chalk.red(e));
-
-    return;
-  }
-
-  if (!mergedOptions.quiet) {
-    logOutput(dirName, componentName);
   }
 }
-
-function logOutput(dirName: string, componentName: string) {
-  okLog(`Created folder components/${dirName}`);
-  okLog(`Created file components/${dirName}/${componentName}.tsx`);
-
-  okLog(`Created file components/${dirName}/${componentName}.styles.scss`);
-
-  okLog(`Created file components/${dirName}/${componentName}.test.tsx`);
-
-  okLog(`Created file components/${dirName}/${componentName}.stories.tsx`);
-
-  okLog(`Created file components/${dirName}/index.tsx`);
-}
-
-const okLog = (...args: any) => console.log(chalk.green(...args));
 
 async function createFileFromTemplate(
   dirName: string,
@@ -94,17 +83,30 @@ async function createFileFromTemplate(
   templateFileName: string,
   options: Options
 ) {
+  const pathLeadingToTemplateFolder = hasACustomTemplateDir()
+    ? path.join(process.cwd())
+    : path.join(__dirname, "..");
+
   const templateFileContent = await fs.readFile(
     path.join(
-      __dirname,
-      "..",
+      pathLeadingToTemplateFolder,
 
-      `template/${options.templateName}/${templateFileName}`
+      `template/${options.template}/${templateFileName}`
     ),
     { encoding: "utf-8" }
   );
 
-  return fs.writeFile(
+  if (options.dryRun) {
+    okLog(
+      `Created file components/${dirName}/${templateFileName.replace(
+        "__Component__",
+        componentName
+      )}`
+    );
+    return;
+  }
+
+  await fs.writeFile(
     path.join(
       process.cwd(),
       "components",
@@ -112,5 +114,34 @@ async function createFileFromTemplate(
       `${templateFileName.replace("__Component__", componentName)}`
     ),
     templateFileContent.replace(/__Component__/g, componentName)
+  );
+
+  if (options.quiet) return;
+
+  okLog(
+    `Created file components/${dirName}/${templateFileName.replace(
+      "__Component__",
+      componentName
+    )}`
+  );
+}
+
+function okLog(arg: string): void {
+  console.log(chalk.green(arg));
+}
+
+function hasACustomTemplateDir(): boolean {
+  return existsSync(path.join(process.cwd(), "template"));
+}
+
+function isJest(): boolean {
+  return !!process.env.JEST_WORKER_ID;
+}
+
+function printOnlineHelp() {
+  console.log(
+    chalk.magenta(
+      "Unsure about the usage of the program? visit us at https://carboniaweb.com/gc-create"
+    )
   );
 }
