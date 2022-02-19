@@ -1,6 +1,8 @@
 import { Command } from "commander";
 
-import create from "./create";
+import create from "./core/create";
+// @ts-ignore
+import destroy from "./core/destroy";
 
 const program = new Command();
 
@@ -31,12 +33,12 @@ program
   });
 
 program
-  .command("delete")
+  .command("destroy")
   .description("Delete a component")
   .argument("<name>", "Name for the component")
   .action((name) => {
     console.log({ name });
-    console.error("not implemented yet");
+    destroy(name);
   });
 
 program.parse(process.argv);
