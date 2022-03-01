@@ -6,7 +6,6 @@
   "description": "React component generator",
   "keywords": [
     "react",
-    "template",
     "generator",
     "react-cli",
     "react-component"
@@ -23,7 +22,8 @@
     "build": "node build.js",
     "gc": "yarn build && node index.js",
     "test": "jest --runInBand",
-    "lint": "eslint --ext .ts,.js src"
+    "lint": "eslint --ext .ts,.js src",
+    "test:destroy": "yarn test __tests__/destroy.test.ts"
   },
   "devDependencies": {
     "@jest/globals": "^27.5.1",

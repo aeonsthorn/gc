@@ -1,3 +1,5 @@
-export default function destroy(componentName) {
+function destroy(componentName) {
   console.log("destroy", componentName);
 }
+
+module.exports = destroy;

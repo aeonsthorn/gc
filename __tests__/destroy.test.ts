@@ -8,7 +8,8 @@ import {
   expect,
 } from "@jest/globals";
 import create from "../src/core/create";
-import destroy from "../src/core/destroy";
+
+import destroy from "../src/core/destroy/destroy";
 
 describe("destroy command should destroy a component", () => {
   beforeAll(async () => {
@@ -26,6 +27,7 @@ describe("destroy command should destroy a component", () => {
 
   afterAll(async () => {
     await fs.unlink("styles/globals.scss");
+    await fs.rm("components", { recursive: true, force: true });
     return fs.rmdir("styles");
   });
 

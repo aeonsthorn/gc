@@ -17,7 +17,7 @@ type Options = {
   template?: string;
 };
 
-const DEFAULT_TEMPLATE_NAME = "js-next";
+const DEFAULT_TEMPLATE_NAME = "ts-globalScss";
 
 export default async function create(name: string, options: Options) {
   const configFileOptions = await loadConfig();
