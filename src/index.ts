@@ -1,8 +1,7 @@
 import { Command } from "commander";
 
 import create from "./core/create";
-// @ts-ignore
-import destroy from "./core/destroy";
+import remove from "./core/remove";
 
 const program = new Command();
 
@@ -38,12 +37,12 @@ program
   });
 
 program
-  .command("destroy")
+  .command("remove")
   .description("Delete a component")
   .argument("<name>", "Name for the component")
-  .action((name) => {
-    console.log({ name });
-    destroy(name);
-  });
+  .option("--quiet", "Quiet mode")
+  .option("--dry-run", "Dry run")
+
+  .action(remove);
 
 program.parse(process.argv);

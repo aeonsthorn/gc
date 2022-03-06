@@ -1,7 +1,27 @@
 # gc-react
 
 gc-react is a cli tool to <strong>generate react components quickly</strong>. You can use one of the templates or add your own to cut down
-on the boilerplate typing time and reduce typos.
+on the boilerplate typing time and to reduce typos.
+
+<br/>
+
+[Installation](#installation)
+
+<br/>
+
+[Choosing a template](#component-template)
+
+<br/>
+
+[Create a component](#creating-a-component)
+
+<br/>
+
+[Delete a component](#deleting-a-component)
+
+<br/>
+
+[Options](#options)
 
 <br/>
 
@@ -62,7 +82,7 @@ $ npm install -g gc-react
 <br/>
 <br/>
 
-# Usage
+# Creating a component
 
 #### Make sure to replace 'component_name' with the name of the component you want to create.
 
@@ -101,9 +121,48 @@ $ gc create 'component_name'
 <br/>
 <br/>
 
+# Deleting a component
+
+#### Make sure to replace 'component_name' with the name of the component you want to create.
+
+<br/>
+
+## With yarn
+
+### In the root of your react project
+
+<br/>
+<code>
+$ yarn gc remove 'component_name'
+</code>
+
+<br/>
+<br/>
+
+## With npm
+
+### In the root of your react project
+
+<br/>
+<code>
+$ npm run gc remove 'component_name'
+</code>
+<br/>
+<br/>
+
+## Installed globally
+
+<br/>
+<code>
+$ gc remove 'component_name'
+</code>
+
+<br/>
+<br/>
+
 # Options
 
-#### You can specify options has command line arguments <strong>and/or </strong> by creating a <strong>gc-react.config.json</strong> file at the root of your project.
+#### You can specify options with command line arguments <strong>and/or </strong> by creating a <strong>gc-react.config.json</strong> file at the root of your project.
 
 <br/>
 
@@ -116,7 +175,7 @@ $ gc create 'component_name'
 // filename : gc-react.config.json
 
 {
-    "template" : 'js-next',
+    "template" : 'fireship',
 }
 </code>
 </pre>
@@ -132,6 +191,10 @@ $ gc create 'component_name'
 ## --quiet
 
 ### No console.log describing the execution
+
+<br/>
+
+# Component Template
 
 <br/>
 
@@ -185,3 +248,7 @@ $ gc create navbar --template js-nextjs
 
 </code>
 </pre>
+
+# TODO
+
+## Add a warning when trying to remove a component that does not exists

@@ -1,7 +1,7 @@
 import { promises as fs, existsSync } from "fs";
 import {
   describe,
-  beforeAll,
+  beforeEach,
   afterEach,
   afterAll,
   it,
@@ -9,10 +9,10 @@ import {
 } from "@jest/globals";
 import create from "../src/core/create";
 
-import destroy from "../src/core/destroy/destroy";
+import remove from "../src/core/remove";
 
 describe("destroy command should destroy a component", () => {
-  beforeAll(async () => {
+  beforeEach(async () => {
     await fs.mkdir("styles");
     return fs.writeFile(
       "styles/globals.scss",
@@ -21,30 +21,27 @@ describe("destroy command should destroy a component", () => {
   });
 
   afterEach(async () => {
+    await fs.rm("styles", { recursive: true, force: true });
     await fs.rm("coco", { recursive: true, force: true });
     return fs.rm("yoyo", { recursive: true, force: true });
   });
 
-  afterAll(async () => {
-    await fs.unlink("styles/globals.scss");
-    await fs.rm("components", { recursive: true, force: true });
-    return fs.rmdir("styles");
-  });
+  afterAll(async () => fs.rm("components", { recursive: true, force: true }));
 
   it("should destroy all the files and remove the import in the globals.scss file", async () => {
     await create("yoyo", { quiet: true });
 
-    await destroy("yoyo");
+    await remove("yoyo", { quiet: true });
 
-    expect(existsSync("yoyo/Yoyo.tsx")).toBe(false);
+    expect(existsSync("components/yoyo/Yoyo.tsx")).toBe(false);
 
-    expect(existsSync("yoyo/Yoyo.stories.tsx")).toBe(false);
+    expect(existsSync("components/yoyo/Yoyo.stories.tsx")).toBe(false);
 
-    expect(existsSync("yoyo/Yoyo.test.tsx")).toBe(false);
+    expect(existsSync("components/yoyo/Yoyo.test.tsx")).toBe(false);
 
-    expect(existsSync("yoyo/index.ts")).toBe(false);
+    expect(existsSync("components/yoyo/index.ts")).toBe(false);
 
-    expect(existsSync("yoyo/Yoyo.styles.scss")).toBe(false);
+    expect(existsSync("componentss/yoyo/Yoyo.styles.scss")).toBe(false);
 
     const scssGlobalFileContent = await fs.readFile("styles/globals.scss", {
       encoding: "utf-8",
@@ -59,12 +56,12 @@ describe("destroy command should destroy a component", () => {
     await create("coco", { quiet: true });
     await create("kiki", { quiet: true });
 
-    await destroy("coco");
+    await remove("coco", { quiet: true });
 
-    expect(existsSync("koko/Kiki.tsx")).toBe(true);
-    expect(existsSync("koko/Kiki.stories.tsx")).toBe(true);
-    expect(existsSync("koko/Kiki.test.tsx")).toBe(true);
-    expect(existsSync("koko/index.ts")).toBe(true);
-    expect(existsSync("koko/Kiki.styles.scss")).toBe(true);
+    expect(existsSync("components/kiki/Kiki.tsx")).toBe(true);
+    expect(existsSync("components/kiki/Kiki.stories.tsx")).toBe(true);
+    expect(existsSync("components/kiki/Kiki.test.tsx")).toBe(true);
+    expect(existsSync("components/kiki/index.ts")).toBe(true);
+    expect(existsSync("components/kiki/Kiki.styles.scss")).toBe(true);
   });
 });
