@@ -34,7 +34,7 @@ on the boilerplate typing time and to reduce typos.
 <br/>
 
 <code>
-$ npm install gc-react
+$ npm install gc-react --save-dev
 </code>
 
 <br/>
@@ -44,7 +44,7 @@ $ npm install gc-react
 
 <br/>
 <code>
-$ yarn add gc-react
+$ yarn add gc-react -D
 </code>
 
 <br/>
@@ -203,6 +203,7 @@ $ gc remove 'component_name'
 ### Specify the template to start from. Currently available :
 
 <ul>
+    <li>fireship</li>
     <li>ts-globalScss</li>
     <li>js-nextjs</li>
     <li>ts-nextjs</li>
@@ -216,7 +217,7 @@ $ gc remove 'component_name'
 
 <pre>
 <code>
-$ gc create navbar --template js-nextjs
+$ gc create navbar --template fireship
 </code>
 </pre>
 
@@ -251,4 +252,6 @@ $ gc create navbar --template js-nextjs
 
 # TODO
 
-## Add a warning when trying to remove a component that does not exists
+### Add a warning when trying to remove a component that does not exists
+
+### Easier to read error when template from options or cli arguments does not exists
