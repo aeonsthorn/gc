@@ -15,6 +15,7 @@ type Options = {
   dryRun?: boolean;
   quiet?: boolean;
   template?: string;
+  globalStyles?: boolean;
 };
 
 const DEFAULT_TEMPLATE_NAME = "ts-globalScss";
@@ -37,6 +38,18 @@ export default async function create(name: string, options: Options) {
   const dirName = name.charAt(0).toLowerCase() + name.slice(1);
   const componentName = name.charAt(0).toUpperCase() + name.slice(1);
 
+
+  if (mergedOptions.globalStyles) {
+    const globalStylesFileExists = existsSync("styles/globals.scss");
+
+    if (globalStylesFileExists) {
+      await appendImportToGlobalStylesFile(dirName, componentName);
+    } else {
+      console.log(chalk.red(`Aborting, Could not find styles/globals.scss`));
+      return;
+    }
+  }
+
   try {
     if (!mergedOptions.dryRun) {
       await fs.mkdir(path.join(process.cwd(), "components", dirName), {
@@ -46,12 +59,6 @@ export default async function create(name: string, options: Options) {
 
     if (!options.quiet) {
       okLog(`Created folder components/${dirName}`);
-    }
-
-    const globalStylesFileExists = existsSync("styles/globals.scss");
-
-    if (globalStylesFileExists) {
-      await appendImportToGlobalStylesFile(dirName, componentName);
     }
 
     const templateFilesDir = hasACustomTemplateDir()
@@ -141,7 +148,7 @@ function isJest(): boolean {
 function printOnlineHelp() {
   console.log(
     chalk.magenta(
-      "Unsure about the usage of the program? visit us at https://carboniaweb.com/gc-create"
+      "Unsure about the usage of the program? visit us at https://carboniaweb.com"
     )
   );
 }

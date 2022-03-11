@@ -15,6 +15,7 @@ program
   .description("Create a new component")
   .argument("<name>", "Name for the component")
   .option("--quiet", "Quiet mode")
+  .option("--global-styles", "Add component scss import to global.scss file")
   .option(
     "--template <string>",
     `Name of the template you want to use.
