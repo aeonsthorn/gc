@@ -38,6 +38,10 @@ export default async function create(name: string, options: Options) {
   const dirName = name.charAt(0).toLowerCase() + name.slice(1);
   const componentName = name.charAt(0).toUpperCase() + name.slice(1);
 
+  if (existsSync(path.join(process.cwd(), "components", dirName))) {
+    console.log(chalk.red(`Component ${name} already exists`));
+    return;
+  }
 
   if (mergedOptions.globalStyles) {
     const globalStylesFileExists = existsSync("styles/globals.scss");
