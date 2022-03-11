@@ -194,6 +194,12 @@ $ gc remove 'component_name'
 
 <br/>
 
+## --global-styles
+
+### If specified, the command will try to find and add an import to a styles/global.scss file. Should be used with the ts-globalScss template.
+
+<br/>
+
 # Component Template
 
 <br/>
@@ -207,6 +213,7 @@ $ gc remove 'component_name'
     <li>ts-globalScss</li>
     <li>js-nextjs</li>
     <li>ts-nextjs</li>
+    <li>ts-tailwind</li>
 </ul>
 
 <br/>
