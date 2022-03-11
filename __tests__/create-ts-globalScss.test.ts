@@ -26,6 +26,7 @@ describe("create command should create a component", () => {
     await create("coco", {
       quiet: true,
       template: "ts-globalScss",
+      globalStyles: true,
     });
 
     expect(existsSync("components/coco/Coco.tsx")).toBe(true);
