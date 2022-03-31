@@ -12,10 +12,5 @@ export default {
 const Template: ComponentStory<typeof __Component__> = (args) => (
   <__Component__ {...args} />
 );
-export const Doc = Template.bind({});
-Doc.args = docProps;
-
 export const Default = Template.bind({});
-Default.args = {
-  // args here
-}
+Default.args = docProps;

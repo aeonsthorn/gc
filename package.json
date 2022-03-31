@@ -1,6 +1,6 @@
 {
   "name": "gc-react",
-  "version": "0.1.2",
+  "version": "0.1.22",
   "main": "index.js",
   "license": "MIT",
   "description": "React component generator",
